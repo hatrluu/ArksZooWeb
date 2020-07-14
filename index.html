@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/styles/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/styles/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                ARK's Zoo Server stuff
+            </div>
+            <div class="card-body text-center">
+                <div class="server-status div-item">
+                    <span class="header">Server status:</span>
+                    <h1 id="server-status" class="red">No data</h1>
+                    <div>
+                        <button type="button" class="btn btn-primary" title="Start the server">Start server</button>
+                        <button type="button" class="btn btn-danger" title="Stop the server">Stop server</button>
+                        <button id="check-server" type="button" class="btn btn-secondary">Check server now</button>
+                    </div>
+                </div>
+                <div class="backup-status div-item">
+                    <span class="header">Backup status:</span>
+                    <h1 id="backup-status" class="red">No data</h1>
+                    <span id="latest-backup" class="red">No data</span>
+                    <div>
+                        <button type="button" class="btn btn-primary" title="Start the backup process">Start backup</button>
+                        <button type="button" class="btn btn-danger" title="Stop the backup process">Stop backup</button>
+                        <button id="check-backup" type="button" class="btn btn-secondary">Check backup now</button>
+                    </div>
+                </div>
+                <div class="current-settings div-item">
+                    <span class="header">Server current settings:</span>
+                    <ul id="current-server-settings" class="server-settings text-left"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script src="/scripts/js/jquery-3.5.1.min.js"></script>
+    <script src="/scripts/js/bootstrap.bundle.js"></script>
+    <script src="/scripts/app.js"></script>
+</body>
+
+</html>

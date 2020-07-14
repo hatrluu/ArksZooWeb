@@ -1,0 +1,52 @@
+html, body {
+    box-sizing: border-box;
+    position: fixed;
+    width: 100%;
+    min-height: 100%; 
+    z-index: 1;
+    margin: auto;
+    left: 0;
+    top: 0;
+    transition: 0.5s ease-in-out;
+}
+.container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.card, .div-item{
+    box-shadow: 0 0 10px rgba(0,0,0, 0.1);
+}
+.div-item {
+    margin: 1em;
+    padding: 1em;
+    border: 1px solid rgb(214, 214, 214);
+    border-radius: 0.25em;
+}
+
+.div-item .header {
+    font-weight: bold;
+}
+
+.card-body {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin: auto;
+}
+.server-settings {
+    height: 300px;
+    overflow-y: auto;
+    list-style: none;
+}
+.server-settings li::before {
+    content: "- ";
+}
+.green {
+    color: green;
+}
+.red {
+    color: red;
+}
