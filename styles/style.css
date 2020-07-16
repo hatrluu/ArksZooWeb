@@ -44,6 +44,7 @@ html, body {
     height: 400px;
     overflow-y: auto;
     list-style: none;
+    padding: 0;
 }
 .server-settings li::before {
     content: "- ";

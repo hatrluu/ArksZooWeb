@@ -30,7 +30,6 @@ var serverStatus;
 var backupStatus;
 var mapName = "TheIsland";
 
-
 var init = function () {
     serverStatusService();
     backupStatusService();
