@@ -19,6 +19,10 @@ html, body {
 .card, .div-item{
     box-shadow: 0 0 10px rgba(0,0,0, 0.1);
 }
+.items {
+    display: flex;
+    flex-direction: row;
+}
 .div-item {
     margin: 1em;
     padding: 1em;
@@ -31,13 +35,13 @@ html, body {
 }
 
 .card-body {
-    display: flex;
+    /* display: flex;
     justify-content: center;
     flex-direction: column;
-    margin: auto;
+    margin: auto; */
 }
 .server-settings {
-    height: 300px;
+    height: 400px;
     overflow-y: auto;
     list-style: none;
 }
