@@ -25,7 +25,7 @@ $(document).ready(function(){
 var isProd = 'prod';
 var hostname = isProd==='prod' ? '99.147.216.168': 'localhost';
 var port = isProd==='prod' ? '80' : '44347';
-var connectionPath = `http://${hostname}/API/`
+var connectionPath = `http://${hostname}/`
 var serverStatus;
 var backupStatus;
 var mapName = "TheIsland";
