@@ -24,8 +24,7 @@ $(document).ready(function(){
 
 var isProd = 'prod';
 var hostname = isProd==='prod' ? 'www.arks-zoo.xyz': 'localhost';
-var port = isProd==='prod' ? '80' : '44347';
-var connectionPath = `http://${hostname}/`
+var connectionPath = `https://${hostname}/`
 var serverStatus;
 var backupStatus;
 var mapName = "TheIsland";
