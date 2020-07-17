@@ -23,7 +23,7 @@ $(document).ready(function(){
 });
 
 var isProd = 'prod';
-var hostname = isProd==='prod' ? '99.147.216.168': 'localhost';
+var hostname = isProd==='prod' ? 'www.arks-zoo.xyz': 'localhost';
 var port = isProd==='prod' ? '80' : '44347';
 var connectionPath = `http://${hostname}/`
 var serverStatus;
