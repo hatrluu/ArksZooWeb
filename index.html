@@ -11,45 +11,111 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="card">
-            <div class="card-header">
-                ARK's Zoo Server stuff
-            </div>
-            <div class="card-body text-center items">
-                <div>
-                    <div class="server-status div-item">
+    <div class="wrapper">
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    ARK Server Control
+                </div>
+                <div class="card-body text-center items">
+                    <div class="server-status">
                         <span class="header">Server status:</span>
                         <h1 id="server-status" class="red">No data</h1>
                         <div>
-                            <button id="start-server" type="button" class="btn btn-primary" title="Start the server">Start server</button>
-                            <button id="stop-server" type="button" class="btn btn-danger" title="Stop the server">Stop server</button>
+                            <button id="start-server" type="button" class="btn btn-primary" title="Start the server">Start
+                                server</button>
+                            <button id="stop-server" type="button" class="btn btn-danger" title="Stop the server">Stop
+                                server</button>
                             <button id="check-server" type="button" class="btn btn-secondary">Check server now</button>
                         </div>
                     </div>
-                    <div class="backup-status div-item">
+                    <div class="backup-status">
                         <span class="header">Backup status:</span>
                         <h1 id="backup-status" class="red">No data</h1>
                         <span id="latest-backup" class="red">No data</span>
                         <div>
-                            <button id="start-backup" type="button" class="btn btn-primary" title="Start the backup process">Start backup</button>
-                            <button id="stop-backup" type="button" class="btn btn-danger" title="Stop the backup process">Stop backup</button>
+                            <button id="start-backup" type="button" class="btn btn-primary"
+                                title="Start the backup process">Start backup</button>
+                            <button id="stop-backup" type="button" class="btn btn-danger"
+                                title="Stop the backup process">Stop backup</button>
                             <button id="check-backup" type="button" class="btn btn-secondary">Check backup now</button>
+                            <!-- <button id="test-backup" type="button" class="btn btn-secondary">Test backup</button> -->
                         </div>
                     </div>
                 </div>
-                <div>
-                    <div class="current-settings div-item">
-                        <span class="header">Server current settings:</span>
-                        <ul id="current-server-settings" class="server-settings text-left"></ul>
+                <div class="card-footer">
+                    <p>
+                        Notes: At the moment I can't ping to the steam server yet so right now I'm checking if the game process is running. 
+                        I'm adding an approx 5 minutes wait time for server to start completely. Send Help!
+                    </p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">Current Server Settings:</div>
+                <div class="card-body">
+                    <div>
+                        <div class="current-settings">
+                            <ul id="current-server-settings" class="server-settings text-left"></ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <button id="admin-console">Show admin console</button>
+            <div class="card admin-class">
+                <div class="card-header">Current Server Config:</div>
+                <div class="card-body">
+                    <div class="server-config">
+                        <span class="header"></span>
+                        <div id="server-config">
+                            <div class="form-group ">
+                                <label>Game Path:</label><br>
+                                <span id="game-path-config" class="item"></span><br>
+                            </div>
+                            <div class="form-group ">
+                                <label>Backup Path:</label><br>
+                                <span id="backup-path-config" class="item"></span><br>
+                            </div>
+                            <div class="form-group ">
+                                <label>Backup Interval:</label><br>
+                                <span id="backup-interval-config" class="item"></span><br>
+                            </div>
+                            <div class="form-group ">
+                                <label>Hours Save:</label><br>
+                                <span id="hours-save-config" class="item"></span><br>
+                            </div>
+                        </div>
+                        <button id="edit" class="btn btn-primary">Edit</button>
+                    </div>
+                    <div class="edit-form">
+                        <form action="">
+                            <div class="form-group">
+                                <label for="game-path">Game Path:</label>
+                                <input id="game-path" name="game-path" class="form-control" type="text" placeholder="C:\example">
+                            </div>
+                            <div class="form-group">
+                                <label for="backup-path">Backup Path:</label>
+                                <input id="backup-path" name="backup-path" class="form-control" type="text"
+                                    placeholder="C:\example">
+                            </div>
+                            <div class="form-group">
+                                <label for="backup-interval">Backup Interval (minutes):</label>
+                                <input id="backup-interval" name="backup-interval" class="form-control" type="number"
+                                    placeholder="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="hours-save">Hours Save:</label>
+                                <input id="hours-save" name="hours-save" class="form-control" type="number" placeholder="0">
+                            </div>
+                            <div class="form-group">
+                                <button id="form-action" class="btn btn-primary" type="submit">Done</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>    
     </div>
-
-
-
+    
 
     <script src="scripts/js/jquery-3.5.1.min.js"></script>
     <script src="scripts/js/bootstrap.bundle.js"></script>

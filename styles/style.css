@@ -1,44 +1,54 @@
 html, body {
     box-sizing: border-box;
-    position: fixed;
+    /* position: fixed;
     width: 100%;
     min-height: 100%; 
     z-index: 1;
     margin: auto;
     left: 0;
-    top: 0;
+    top: 0; */
     transition: 0.5s ease-in-out;
 }
-.container {
+body{
+    /* background-image: url('./images/theisland-1.jpg'); */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: auto;
+}
+
+.admin-class {
+    display: none;
+}
+.wrapper {
     position: relative;
+    background-color: rgba(0,0,0,.8);
+    height: 100vh;
+    width: 100vw;
+}
+.container {
+    /* position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    min-height: 100vh; */
+    display: flex;
+    justify-content: center;
+}
+.card {
+    margin: 1em;
+    min-width: 500px;
 }
 .card, .div-item{
     box-shadow: 0 0 10px rgba(0,0,0, 0.1);
 }
-.items {
-    display: flex;
-    flex-direction: row;
-}
-.div-item {
+.card-body>div {
     margin: 1em;
     padding: 1em;
     border: 1px solid rgb(214, 214, 214);
     border-radius: 0.25em;
 }
-
-.div-item .header {
+.form-group label{
     font-weight: bold;
-}
-
-.card-body {
-    /* display: flex;
-    justify-content: center;
-    flex-direction: column;
-    margin: auto; */
 }
 .server-settings {
     height: 400px;
@@ -49,9 +59,6 @@ html, body {
 .server-settings li::before {
     content: "- ";
 }
-.green {
-    color: green;
-}
-.red {
-    color: red;
+.item {
+    color: rgb(111, 145, 255);
 }
