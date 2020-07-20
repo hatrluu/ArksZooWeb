@@ -59,7 +59,7 @@ $(document).ready(function(){
 var isProd = 'prod';
 var hostname = isProd==='prod' ? 'www.arks-zoo.xyz': 'localhost';
 var port = isProd==='prod' ? '80' : '44347';
-var connectionPath = `https://${hostname}:${port}/`
+var connectionPath = isProd === 'prod' ? `https://${hostname}/` : `https://${hostname}:${port}/`;
 var serverStatus;
 var backupStatus;
 var mapName = "TheIsland";
