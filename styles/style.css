@@ -10,7 +10,7 @@ html, body {
     transition: 0.5s ease-in-out;
 }
 body{
-    /* background-image: url('./images/theisland-1.jpg'); */
+    background-image: url('./images/theisland-1.jpg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: auto;
@@ -26,17 +26,18 @@ body{
     width: 100vw;
 }
 .container {
-    /* position: relative;
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; */
+    min-height: 100vh;
     display: flex;
     justify-content: center;
 }
 .card {
     margin: 1em;
     min-width: 500px;
+    min-height: 600px;
 }
 .card, .div-item{
     box-shadow: 0 0 10px rgba(0,0,0, 0.1);

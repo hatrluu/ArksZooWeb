@@ -31,6 +31,10 @@ $(document).ready(function(){
         $('.server-config').hide();
         $('.edit-form').show();
     })
+    $('#cancel-edit').click(()=>{
+        $('.server-config').show();
+        $('.edit-form').hide();
+    })
     $('form').on("submit", function(event) {
         event.preventDefault();
         var form = $('form').serializeArray();
@@ -50,11 +54,6 @@ $(document).ready(function(){
             getServerConfig();
         });
     });
-
-    $('#admin-console').click(function(){
-        $('.admin-class').show();
-        $(this).text('Hide admin console');
-    })
 });
 
 var isProd = 'dev';
