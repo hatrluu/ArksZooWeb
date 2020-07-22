@@ -2,7 +2,7 @@ $(document).ready(function(){
     init();
 
     $('#start-server').click(()=>{
-        startServerService();
+        startServerService(mapName);
         hideButton('start-server');
     })
     $('#stop-server').click(()=>{
@@ -54,6 +54,10 @@ $(document).ready(function(){
             getServerConfig();
         });
     });
+
+    $('#startCustomMap').click(()=>{
+        startServerService('TheCenter');
+    })
 });
 
 var isProd = 'prod';
@@ -104,7 +108,7 @@ var updateServerService = async function(data) {
          console.log(res.responseJSON.errors)
      })
 }
-var startServerService = async function() {
+var startServerService = async function(mapName) {
     await $.get(`${connectionPath}startServer/${mapName}`, function (res) {
         console.log(`Starting ${mapName}`);
         console.log(res);
@@ -119,7 +123,9 @@ var stopServerService = async function() {
         console.log(`Stopping server`);
         console.log(res);
     }).then(function(){
-        serverStatusService();
+        setTimeout(function() {
+            serverStatusService();
+        },500)
     });
 }
 var serverStatusService = function () { 
