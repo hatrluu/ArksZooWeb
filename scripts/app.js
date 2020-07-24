@@ -115,7 +115,8 @@ var startServerService = async function(mapName) {
     }).then(function(){
         $('#server-status').text('Starting ...').css('color','orange');
         setTimeout(function(){
-            serverStatusService()},300000);
+            serverStatusService()
+        },300000);
     });
 }
 var stopServerService = async function() {
