@@ -210,8 +210,9 @@ var getCurrentServerSettings = function () {
         'PlayerDamageMultiplier=2.0',
         'ItemStackSizeMultiplier=10',
         'Added crossplay',
-        'PlayerBaseStatMultipliers[7]=2 -> double weight capacity'
-
+        'PlayerBaseStatMultipliers[7]=2 -> double weight capacity',
+        'DifficultyOffset=1.8',
+        'OverrideOfficialDifficulty=7.0'
     ]
     
     currentServerSettings.forEach(item => {
