@@ -1,3 +1,14 @@
+'use strict';
+
+// var env = 'dev';
+var env = 'prod';
+var hostname = env ==='prod' ? 'www.arks-zoo.xyz': 'localhost';
+var port = env ==='prod' ? '80' : '44347';
+var connectionPath = env === 'prod' ? `https://${hostname}/` : `https://${hostname}:${port}/`;
+var serverStatus;
+var backupStatus;
+var mapName = "The Island";
+
 $(document).ready(function(){
     init();
 
@@ -24,9 +35,9 @@ $(document).ready(function(){
         backupStatusService();
         latestBackupService();
     })
-    // $('#test-backup').click(()=> {
-    //     testBackup();
-    // })
+    $('#test-backup').click(()=> {
+        testBackup();
+    })
     $('#edit').click(()=> {
         $('.server-config').hide();
         $('.edit-form').show();
@@ -52,21 +63,20 @@ $(document).ready(function(){
         
         updateServerService(JSON.stringify(serverObject)).then(function() {
             getServerConfig();
+            latestBackupService();
         });
     });
 
     $('#startCustomMap').click(()=>{
         startServerService('TheCenter');
     })
-});
 
-var isProd = 'prod';
-var hostname = isProd==='prod' ? 'www.arks-zoo.xyz': 'localhost';
-var port = isProd==='prod' ? '80' : '44347';
-var connectionPath = isProd === 'prod' ? `https://${hostname}/` : `https://${hostname}:${port}/`;
-var serverStatus;
-var backupStatus;
-var mapName = "TheIsland";
+    $('#update').click(function() {
+        if($('.admin-class').css('display') == 'none'){
+            $('.admin-class').show();
+        } else $('.admin-class').hide();
+    })
+});
 
 var init = function () {
     serverStatusService();
@@ -75,9 +85,8 @@ var init = function () {
     getServerConfig();
     getCurrentServerSettings();
 
-    $('.admin-class').hide();
     $('.edit-form').hide();
-    console.log(serverStatus);
+    $('#map-name').text(mapName);
     console.log('Application started');
 }
 
@@ -91,6 +100,26 @@ var hideButton = function (componentName) {
     }
 }
 
+/* HTTP Methods v */
+var getServerConfig = function () {
+    $.get(`${connectionPath}server/settings`, function(res) {
+        console.log('get server config');
+        console.log(res);
+
+        $('#game-path-config').text(res.GamePath);
+        $('#game-path').val(res.GamePath);
+
+        $('#backup-path-config').text(res.BackupPath);
+        $('#backup-path').val(res.BackupPath);
+
+        $('#backup-interval-config').text(res.BackupInterval);
+        $('#backup-interval').val(res.BackupInterval);
+
+        $('#hours-save-config').text(res.HoursSave);
+        $('#hours-save').val(res.HoursSave);
+    });
+}
+
 var updateServerService = async function(data) {
     var success = function (){
         console.log('Server config updated');
@@ -99,7 +128,7 @@ var updateServerService = async function(data) {
     }
     await $.ajax({
         type: 'POST',
-        url: `${connectionPath}servermodification`,
+        url: `${connectionPath}server/settings`,
         data: data,
         contentType: 'application/json',
         success: success
@@ -109,7 +138,9 @@ var updateServerService = async function(data) {
      })
 }
 var startServerService = async function(mapName) {
-    await $.get(`${connectionPath}startServer/${mapName}`, function (res) {
+    mapName = mapName.trim().replace(' ', '');
+    //Map Name validation
+    await $.get(`${connectionPath}server/start/${mapName}`, function (res) {
         console.log(`Starting ${mapName}`);
         console.log(res);
     }).then(function(){
@@ -120,18 +151,18 @@ var startServerService = async function(mapName) {
     });
 }
 var stopServerService = async function() {
-    await $.get(`${connectionPath}stopServer`, function (res) {
+    await $.get(`${connectionPath}server/stop`, function (res) {
         console.log(`Stopping server`);
         console.log(res);
     }).then(function(){
         setTimeout(function() {
             serverStatusService();
-        },500)
+        },3000)
     });
 }
 var serverStatusService = function () { 
     console.log('Running server status check');
-    $.get(`${connectionPath}IsServerOn`, function(res) {
+    $.get(`${connectionPath}server/status`, function(res) {
         serverStatus = res;
         if(serverStatus) {
             $('#server-status').text('Online').css('color','lightgreen');
@@ -144,7 +175,7 @@ var serverStatusService = function () {
 };
 
 var startBackupService = async function() {
-    await $.get(`${connectionPath}backup/startBackup`, function (res) {
+    await $.get(`${connectionPath}backup/start`, function (res) {
         console.log(`Starting backup`);
         console.log(res);
     }).then(function(){
@@ -152,7 +183,7 @@ var startBackupService = async function() {
     });
 }
 var stopBackupService = async function() {
-    await $.get(`${connectionPath}backup/stopBackup`, function (res) {
+    await $.get(`${connectionPath}backup/stop`, function (res) {
         console.log(`Stopping backup`);
         console.log(res);
     }).then(function(){
@@ -161,7 +192,7 @@ var stopBackupService = async function() {
 }
 var backupStatusService = function () {
     console.log('Running backup status check');
-    $.get(`${connectionPath}backup/backupstatus`, function(res) {
+    $.get(`${connectionPath}backup/status`, function(res) {
         backupStatus = res;
         if(backupStatus) {
             $('#backup-status').text('Running').css('color','lightgreen');
@@ -175,27 +206,19 @@ var backupStatusService = function () {
 
 var latestBackupService = function () {
     console.log('Running latest backup check');
-    $.get(`${connectionPath}backup/latestBackup`, function(res) {
-            $('#latest-backup').text(`Latest backup at ${res.slice(0,2)}:${res.slice(2,4)} ${res.slice(4,6)}, ${res.slice(7,9)}/${res.slice(9)}`).removeClass('red');
+    $.get(`${connectionPath}backup/latest`, function(res) {
+        $('#latest-backup').text(`Latest backup at ${res.slice(0,2)}:${res.slice(2,4)} ${res.slice(4,6)}, ${res.slice(7,9)}/${res.slice(9)}`).removeClass('red');
     })
 }
-var testBackup = function () {
-    $.get(`${connectionPath}backup/testbackup`, function(res) {
+var testBackup = async function () {
+    await $.get(`${connectionPath}backup/test`, function(res) {
         console.log(res);
+    }).then(function() {
+        latestBackupService();
     });
 }
 
-var getServerConfig = function () {
-    $.get(`${connectionPath}servermodification`, function(res) {
-        console.log('get server config')
-        console.log(res)
-        $('#game-path-config').text(res.GamePath);
-        $('#backup-path-config').text(res.BackupPath);
-        $('#backup-interval-config').text(res.BackupInterval);
-        $('#hours-save-config').text(res.HoursSave);
-    });
-}
-
+/* HTTP Methods ^ */
 var getCurrentServerSettings = function () {
     var currentServerSettings = [
         'XPMultiplier=3',
