@@ -11,17 +11,20 @@
 </head>
 
 <body>
+    <div class="map-name-banner">
+        <h1 id="map-name">Map Name</h1>
+    </div>
     <div class="wrapper">
         <div class="container">
             <div class="card">
                 <div class="card-header">
-                    ARK Server Control
+                    ARK Server Control:
                 </div>
                 <div class="card-body text-center items">
                     <div class="server-status">
                         <span class="header">Server status:</span>
                         <h1 id="server-status" class="red">No data</h1>
-                        <div>
+                        <div class="btn-group" role="group">
                             <button id="start-server" type="button" class="btn btn-primary" title="Start the server">Start
                                 server</button>
                             <button id="stop-server" type="button" class="btn btn-danger" title="Stop the server">Stop
@@ -33,13 +36,13 @@
                         <span class="header">Backup status:</span>
                         <h1 id="backup-status" class="red">No data</h1>
                         <span id="latest-backup" class="red">No data</span>
-                        <div>
+                        <div class="btn-group" role="group">
                             <button id="start-backup" type="button" class="btn btn-primary"
                                 title="Start the backup process">Start backup</button>
                             <button id="stop-backup" type="button" class="btn btn-danger"
                                 title="Stop the backup process">Stop backup</button>
-                            <button id="check-backup" type="button" class="btn btn-secondary">Check backup now</button>
-                            <!-- <button id="test-backup" type="button" class="btn btn-secondary">Test backup</button> -->
+                            <button id="check-backup" type="button" class="btn btn-secondary">Check backup</button>
+                            <button id="test-backup" type="button" class="btn btn-warning">Manual backup</button>
                         </div>
                     </div>
                 </div>
@@ -63,7 +66,7 @@
             <div class="card admin-class"> 
                 <div class="card-header">Current Server Config:</div>
                 <div class="card-body">
-                    <button id="startCustomMap" class="btn btn-danger">Start The Center</button>
+                    <!-- <button id="startCustomMap" class="btn btn-danger">Start The Center</button> -->
                     <div class="server-config">
                         <span class="header"></span>
                         <div id="server-config">
@@ -114,6 +117,7 @@
                     </div>
                 </div>
             </div>
+            <div class="toggle" id="update"></div>
         </div>
     </div>
     

@@ -19,6 +19,16 @@ body{
 .admin-class {
     display: none;
 }
+.map-name-banner {
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    margin-top: 5em;
+}
+
 .wrapper {
     position: relative;
     background-color: rgba(0,0,0,.8);
@@ -62,4 +72,18 @@ body{
 }
 .item {
     color: rgb(111, 145, 255);
+}
+.toggle {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    height: 24px;
+    width: 24px;
+    background-color: transparent;
+    transition: ease 500ms;
+    cursor:  unset;
+}
+
+.toggle:hover {
+    background-color: teal;
 }
