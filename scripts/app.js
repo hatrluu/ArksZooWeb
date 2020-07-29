@@ -1,7 +1,7 @@
 'use strict';
 
-var env = 'dev';
-// var env = 'prod';
+// var env = 'dev';
+var env = 'prod';
 var hostname = env ==='prod' ? 'www.arks-zoo.xyz': 'localhost';
 var port = env ==='prod' ? '80' : '44347';
 var connectionPath = env === 'prod' ? `https://${hostname}/` : `https://${hostname}:${port}/`;
@@ -82,7 +82,6 @@ $(document).ready(function(){
 });
 
 var init = function () {
-    $('#server-status').text('Checking ...').css('color','orange');
     $('#save-world').hide();
     hideButton('stop-server');
     serverStatusService(false);
@@ -149,6 +148,7 @@ var startServerService = async function(mapName) {
     await $.get(`${connectionPath}server/start/${mapName}`, function (res) {
         console.log(`Starting ${mapName}`);
         console.log(res);
+        $('#server-status').text('Starting ...').css('color','orange');
     }).then(function(){
         serverStatusService(true);
         var checkInterval = setInterval(function () {
@@ -166,11 +166,14 @@ var stopServerService = async function() {
         console.log(res);
     }).then(function(){
         serverStatusService(false);
-        stopBackupService();
+        if(backupStatus) {
+            stopBackupService();
+        }
     });
 }
 var serverStatusService = async function (isStarting) { 
     console.log('Running server status check');
+    $('#server-status').text('Checking ...').css('color','orange');
     $('#start-server').prop('disabled',true);
     await $.get(`${connectionPath}server/status`, function(res) {serverStatus = res;console.log(res);}).then(function() {
         if(isStarting && !serverStatus) {
