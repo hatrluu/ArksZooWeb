@@ -12,7 +12,7 @@
 
 <body>
     <div class="map-name-banner">
-        <h1 id="map-name">Map Name</h1>
+        <h1>Current map: <span id="map-name">Map Name</span</h1>
     </div>
     <div class="wrapper">
         <div class="container">
@@ -29,8 +29,10 @@
                                 server</button>
                             <button id="stop-server" type="button" class="btn btn-danger" title="Stop the server">Stop
                                 server</button>
-                            <button id="check-server" type="button" class="btn btn-secondary">Check server now</button>
+                            <button id="check-server" type="button" class="btn btn-secondary">Check server</button>
+                            <button id="save-world" type="button" class="btn btn-primary">Save World</button>
                         </div>
+                        <div style="padding-top: 1em">Server current save: <span id="server-current-save">No data</span></div>
                     </div>
                     <div class="backup-status">
                         <span class="header">Backup status:</span>
@@ -45,12 +47,6 @@
                             <button id="test-backup" type="button" class="btn btn-warning">Manual backup</button>
                         </div>
                     </div>
-                </div>
-                <div class="card-footer">
-                    <p>
-                        Notes: At the moment I can't ping to the steam server yet so right now I'm checking if the game process is running. 
-                        I'm adding an approx 5 minutes wait time for server to start completely. Send Help!
-                    </p>
                 </div>
             </div>
             <div class="card">
