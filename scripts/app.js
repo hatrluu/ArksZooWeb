@@ -174,7 +174,7 @@ var stopServerService = async function() {
 var serverStatusService = async function (isStarting) { 
     console.log('Running server status check');
     $('#server-status').text('Checking ...').css('color','orange');
-    $('#start-server').prop('disabled',true);
+    // $('#start-server').prop('disabled',true);
     await $.get(`${connectionPath}server/status`, function(res) {serverStatus = res;console.log(res);}).then(function() {
         if(isStarting && !serverStatus) {
             $('#server-status').text('Starting ...').css('color','orange');
@@ -187,7 +187,7 @@ var serverStatusService = async function (isStarting) {
                 $('#server-status').text('Offline').css('color','red');
                 hideButton('stop-server');
                 $('#save-world').hide();
-                $('#start-server').prop('disabled',false);
+                // $('#start-server').prop('disabled',false);
             }
         }
     })
