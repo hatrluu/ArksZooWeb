@@ -17,10 +17,13 @@ $(document).ready(function(){
         hideButton('start-server');
     })
     $('#stop-server').click(()=>{
+        $('#server-status').text('Stopping ...').css('color','orange');
         stopServerService();
         hideButton('stop-server');
     })
     $('#check-server').click(()=>{
+        $('#server-status').text('Checking ...').css('color','orange');
+        getServerCurrentSave();
         serverStatusService(false);
     })
     $('#save-world').click(()=>{
@@ -82,14 +85,15 @@ $(document).ready(function(){
 });
 
 var init = function () {
+    $('#server-status').text('Checking ...').css('color','orange');
     $('#save-world').hide();
     hideButton('stop-server');
-    serverStatusService(false);
-    backupStatusService();
-    latestBackupService();
     getServerConfig();
     getCurrentServerSettings();
+    latestBackupService();
     getServerCurrentSave();
+    backupStatusService();
+    serverStatusService(false);
     $('.edit-form').hide();
     $('#map-name').text(mapName);
     console.log('Application started');
@@ -163,8 +167,8 @@ var startServerService = async function(mapName) {
 var stopServerService = async function() {
     await $.get(`${connectionPath}server/stop`, function (res) {
         console.log(`Stopping server`);
-        console.log(res);
     }).then(function(){
+        getServerCurrentSave();
         serverStatusService(false);
         if(backupStatus) {
             stopBackupService();
@@ -173,7 +177,6 @@ var stopServerService = async function() {
 }
 var serverStatusService = async function (isStarting) { 
     console.log('Running server status check');
-    $('#server-status').text('Checking ...').css('color','orange');
     // $('#start-server').prop('disabled',true);
     await $.get(`${connectionPath}server/status`, function(res) {serverStatus = res;console.log(res);}).then(function() {
         if(isStarting && !serverStatus) {
@@ -238,9 +241,8 @@ var testBackup = async function () {
 }
 var getServerCurrentSave = async function() {
     await $.get(`${connectionPath}backup/current`, function(res) {
-        console.log(res);
         var time = new Date(res);
-        $("#server-current-save").text(time.toUTCString());
+        $("#server-current-save").text(time.toLocaleString());
     })
 }
 var saveWorldService = async function(){
