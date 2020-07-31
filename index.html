@@ -8,17 +8,20 @@
     <link rel="stylesheet" href="styles/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
 </head>
 
 <body>
     <div class="map-name-banner">
-        <h1>Current map: <span id="map-name">Map Name</span</h1>
     </div>
     <div class="wrapper">
         <div class="container">
             <div class="card">
                 <div class="card-header">
-                    ARK Server Control:
+                    <h2 id="map-name">Map Name</h2>
                 </div>
                 <div class="card-body text-center items">
                     <div class="server-status">
@@ -44,7 +47,7 @@
                             <button id="stop-backup" type="button" class="btn btn-danger"
                                 title="Stop the backup process">Stop backup</button>
                             <button id="check-backup" type="button" class="btn btn-secondary">Check backup</button>
-                            <button id="test-backup" type="button" class="btn btn-warning">Manual backup</button>
+                            <button id="manual-backup" type="button" class="btn btn-warning">Manual backup</button>
                         </div>
                     </div>
                 </div>

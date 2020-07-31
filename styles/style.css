@@ -1,12 +1,5 @@
 html, body {
     box-sizing: border-box;
-    /* position: fixed;
-    width: 100%;
-    min-height: 100%; 
-    z-index: 1;
-    margin: auto;
-    left: 0;
-    top: 0; */
     transition: 0.5s ease-in-out;
 }
 body{
@@ -19,19 +12,10 @@ body{
 .admin-class {
     display: none;
 }
-.map-name-banner {
-    position: fixed;
-    width: 100%;
-    z-index: 1000;
-    background-color: transparent;
-    display: flex;
-    justify-content: center;
-    margin-top: 5em;
-}
 
 .wrapper {
     position: relative;
-    background-color: rgba(0,0,0,.8);
+    background-color: rgba(0, 0, 0, 0.89);
     height: 100vh;
     width: 100vw;
 }
@@ -57,6 +41,11 @@ body{
     padding: 1em;
     border: 1px solid rgb(214, 214, 214);
     border-radius: 0.25em;
+}
+#map-name {
+    text-align: center;
+    padding: 0;
+    margin: 0;
 }
 .form-group label{
     font-weight: bold;
@@ -86,4 +75,18 @@ body{
 
 .toggle:hover {
     background-color: teal;
+}
+
+@media (max-width: 1100px) {
+    .container {
+        flex-direction: column;
+    }
+    .card {
+        margin: 1em;
+        min-width: 90vw;
+        min-height: unset;
+    }
+    .wrapper {
+        height: 100%;
+    }
 }
