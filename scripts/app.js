@@ -2,12 +2,35 @@
 
 // var env = 'dev';
 var env = 'prod';
-var hostname = env ==='prod' ? 'www.arks-zoo.xyz': 'localhost';
-var port = env ==='prod' ? '80' : '44347';
-var connectionPath = env === 'prod' ? `https://${hostname}/` : `https://${hostname}:${port}/`;
-var serverStatus;
+// var env = 'test';
+var hostname = '';
+var port = '';
+var connectionPath = '';
+switch(env) {
+    case 'prod':
+        hostname = 'www.arks-zoo.xyz';
+        port = '80';
+        connectionPath = `https://${hostname}/`
+        break;
+    case 'dev':
+        hostname = 'localhost';
+        port = '44347';
+        connectionPath = `https://${hostname}:${port}/`
+        break;
+    case 'test':
+        hostname = 'testing.arks-zoo.xyz'
+        port = '80';
+        connectionPath = `https://${hostname}/`
+        break;
+    default:
+        hostname = '';            
+        port = '';
+}
+
+var serverStatus = 0;
 var backupStatus;
 var mapName = "The Island";
+var checkInterval;
 
 $(document).ready(function(){
     init();
@@ -154,10 +177,9 @@ var startServerService = async function(mapName) {
         console.log(res);
         $('#server-status').text('Starting ...').css('color','orange');
     }).then(function(){
-        serverStatusService(true);
-        var checkInterval = setInterval(function () {
+        checkInterval = setInterval(function () {
             serverStatusService(true);
-            if(serverStatus) {
+            if(serverStatus == 200) {
                 clearInterval(checkInterval);
                 startBackupService();
             }
@@ -168,32 +190,44 @@ var stopServerService = async function() {
     await $.get(`${connectionPath}server/stop`, function (res) {
         console.log(`Stopping server`);
     }).then(function(){
+        serverStatus = 0;
         getServerCurrentSave();
-        serverStatusService(false);
+        setTimeout(function(){
+            serverStatusService(false);
+        },2000)
+        // if(checkInterval) {
+        //     clearInterval(checkInterval);
+        // }
         if(backupStatus) {
             stopBackupService();
         }
     });
 }
-var serverStatusService = async function (isStarting) { 
+var serverStatusService = function (isStarting) { 
     console.log('Running server status check');
     // $('#start-server').prop('disabled',true);
-    await $.get(`${connectionPath}server/status`, function(res) {serverStatus = res;console.log(res);}).then(function() {
-        if(isStarting && !serverStatus) {
-            $('#server-status').text('Starting ...').css('color','orange');
-        } else {
-            if(serverStatus) {
+    $.ajax({
+        type: 'GET',
+        url: `${connectionPath}server/status`,
+        success: function(data, textStatus, xhr) {
+            if(xhr.status == 200) {
+                serverStatus = xhr.status;
                 $('#server-status').text('Online').css('color','lightgreen');
                 $('#save-world').show();
                 hideButton('start-server');
-            } else {
-                $('#server-status').text('Offline').css('color','red');
-                hideButton('stop-server');
-                $('#save-world').hide();
-                // $('#start-server').prop('disabled',false);
             }
         }
-    })
+    }).fail(function() {
+        if(isStarting) {
+            $('#server-status').text('Starting ...').css('color','orange');
+        } 
+        else if(!isStarting || serverStatus == 0)
+        {
+            $('#server-status').text('Offline').css('color','red');
+                    hideButton('stop-server');
+                    $('#save-world').hide();
+        }
+     })
 };
 
 var startBackupService = async function() {
@@ -239,8 +273,8 @@ var testBackup = async function () {
         latestBackupService();
     });
 }
-var getServerCurrentSave = async function() {
-    await $.get(`${connectionPath}backup/current`, function(res) {
+var getServerCurrentSave = function() {
+    $.get(`${connectionPath}backup/current`, function(res) {
         var time = new Date(res);
         $("#server-current-save").text(time.toLocaleString());
     })
@@ -253,23 +287,22 @@ var saveWorldService = async function(){
 /* HTTP Methods ^ */
 var getCurrentServerSettings = function () {
     var currentServerSettings = [
-        'XPMultiplier=3',
-        'TamingSpeedMultiplier=10',
-        'HarvestAmountMultiplier=4',
-        'NightTimeSpeedScale=4',
-        'DayTimeSpeedScale=0.5',
-        'PlayerCharacterWaterDrainMultiplier=0.8',
-        'PlayerCharacterFoodDrainMultiplier=0.5',
-        'PlayerCharacterStaminaDrainMultiplier=0.8',
-        'DinoCharacterStaminaDrainMultiplier=0.5',
-        'MapPlayerLocation=True',
-        'PlayerDamageMultiplier=2.0',
-        'ItemStackSizeMultiplier=10',
+        'XPMultiplier = 3',
+        'TamingSpeedMultiplier = 10 => TamingSpeedMultiplier = 15',
+        'HarvestAmountMultiplier = 4',
+        'NightTimeSpeedScale = 4',
+        'DayTimeSpeedScale = 0.5',
+        'PlayerCharacterWaterDrainMultiplier = 0.8',
+        'PlayerCharacterFoodDrainMultiplier = 0.5',
+        'PlayerCharacterStaminaDrainMultiplier = 0.8',
+        'DinoCharacterStaminaDrainMultiplier = 0.5  => DinoCharacterStaminaDrainMultiplier = 0.3',
+        'MapPlayerLocation = True',
+        'PlayerDamageMultiplier = 2.0',
+        'ItemStackSizeMultiplier = 10',
         'Added crossplay',
-        'PlayerBaseStatMultipliers[7]=3 -> weight capacity',
-        'PlayerBaseStatMultipliers[11]=4 -> crafting speed',
-        'DifficultyOffset=1.8',
-        'OverrideOfficialDifficulty=7.0'
+        'PlayerBaseStatMultipliers[7] = 3 (weight capacity)',
+        'DifficultyOffset = 1.8',
+        'OverrideOfficialDifficulty = 7.0'
     ]
     
     currentServerSettings.forEach(item => {
