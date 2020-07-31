@@ -47,7 +47,7 @@ $(document).ready(function(){
     $('#check-server').click(()=>{
         $('#server-status').text('Checking ...').css('color','orange');
         getServerCurrentSave();
-        serverStatusService(false);
+        serverStatusService();
     })
     $('#save-world').click(()=>{
         saveWorldService();
@@ -64,8 +64,8 @@ $(document).ready(function(){
         backupStatusService();
         latestBackupService();
     })
-    $('#test-backup').click(()=> {
-        testBackup();
+    $('#manual-backup').click(()=> {
+        manualBackup();
     })
     $('#edit').click(()=> {
         $('.server-config').hide();
@@ -116,7 +116,7 @@ var init = function () {
     latestBackupService();
     getServerCurrentSave();
     backupStatusService();
-    serverStatusService(false);
+    serverStatusService();
     $('.edit-form').hide();
     $('#map-name').text(mapName);
     console.log('Application started');
@@ -177,13 +177,7 @@ var startServerService = async function(mapName) {
         console.log(res);
         $('#server-status').text('Starting ...').css('color','orange');
     }).then(function(){
-        checkInterval = setInterval(function () {
-            serverStatusService(true);
-            if(serverStatus == 200) {
-                clearInterval(checkInterval);
-                startBackupService();
-            }
-        }, 30*1000); //Every 30 sec
+        serverStatusService();
     });
 }
 var stopServerService = async function() {
@@ -193,7 +187,7 @@ var stopServerService = async function() {
         serverStatus = 0;
         getServerCurrentSave();
         setTimeout(function(){
-            serverStatusService(false);
+            serverStatusService();
         },2000)
         // if(checkInterval) {
         //     clearInterval(checkInterval);
@@ -203,7 +197,7 @@ var stopServerService = async function() {
         }
     });
 }
-var serverStatusService = function (isStarting) { 
+var serverStatusService = function () { 
     console.log('Running server status check');
     // $('#start-server').prop('disabled',true);
     $.ajax({
@@ -216,18 +210,24 @@ var serverStatusService = function (isStarting) {
                 $('#save-world').show();
                 hideButton('start-server');
             }
+            else if (xhr.status == 202) {
+                $('#server-status').text('Starting ...').css('color','orange');
+                hideButton('start-server');
+                checkInterval = setInterval(function () {
+                    serverStatusService();
+                    if(serverStatus == 200) {
+                        clearInterval(checkInterval);
+                        startBackupService();
+                    }
+                }, 30*1000); //Every 30 sec
+            }
+            else if (xhr.status == 204) {
+                $('#server-status').text('Offline').css('color','red');
+                        hideButton('stop-server');
+                        $('#save-world').hide();
+            }
         }
-    }).fail(function() {
-        if(isStarting) {
-            $('#server-status').text('Starting ...').css('color','orange');
-        } 
-        else if(!isStarting || serverStatus == 0)
-        {
-            $('#server-status').text('Offline').css('color','red');
-                    hideButton('stop-server');
-                    $('#save-world').hide();
-        }
-     })
+    })
 };
 
 var startBackupService = async function() {
@@ -266,8 +266,8 @@ var latestBackupService = function () {
         $('#latest-backup').text(`Latest backup at ${res.slice(0,2)}:${res.slice(2,4)} ${res.slice(4,6)}, ${res.slice(7,9)}/${res.slice(9)}`).removeClass('red');
     })
 }
-var testBackup = async function () {
-    await $.get(`${connectionPath}backup/test`, function(res) {
+var manualBackup = async function () {
+    await $.get(`${connectionPath}backup/manual`, function(res) {
         console.log(res);
     }).then(function() {
         latestBackupService();
