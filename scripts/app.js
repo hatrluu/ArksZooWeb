@@ -169,15 +169,17 @@ var updateServerService = async function(data) {
          console.log(res.responseJSON.errors)
      })
 }
-var startServerService = async function(mapName) {
+var startServerService = function(mapName) {
     mapName = mapName.trim().replace(' ', '');
     //Map Name validation
-    await $.get(`${connectionPath}server/start/${mapName}`, function (res) {
+    $.get(`${connectionPath}server/start/${mapName}`, function (res) {
         console.log(`Starting ${mapName}`);
         console.log(res);
         $('#server-status').text('Starting ...').css('color','orange');
     }).then(function(){
-        serverStatusService();
+        setTimeout(function() {
+            serverStatusService(); 
+        }, 100); 
     });
 }
 var stopServerService = async function() {
@@ -197,10 +199,10 @@ var stopServerService = async function() {
         }
     });
 }
-var serverStatusService = function () { 
+var serverStatusService = async function () { 
     console.log('Running server status check');
     // $('#start-server').prop('disabled',true);
-    $.ajax({
+    await $.ajax({
         type: 'GET',
         url: `${connectionPath}server/status`,
         success: function(data, textStatus, xhr) {
