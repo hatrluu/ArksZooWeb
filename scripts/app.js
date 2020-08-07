@@ -30,7 +30,7 @@ switch(env) {
 var serverStatus = 0;
 var backupStatus;
 var mapName = "The Island";
-var checkInterval;
+var checkInterval = null;
 
 $(document).ready(function(){
     init();
@@ -205,6 +205,9 @@ var serverStatusService = function () {
         url: `${connectionPath}server/status`,
         success: function(data, textStatus, xhr) {
             if(xhr.status == 200) {
+                if(checkInterval != null) {
+                    clearInterval(checkInterval);
+                }
                 serverStatus = xhr.status;
                 $('#server-status').text('Online').css('color','lightgreen');
                 $('#save-world').show();
@@ -222,6 +225,9 @@ var serverStatusService = function () {
                 }, 30*1000); //Every 30 sec
             }
             else if (xhr.status == 204) {
+                if(checkInterval != null) {
+                    clearInterval(checkInterval);
+                }
                 $('#server-status').text('Offline').css('color','red');
                         hideButton('stop-server');
                         $('#save-world').hide();
