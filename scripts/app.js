@@ -191,9 +191,9 @@ var stopServerService = async function() {
         setTimeout(function(){
             serverStatusService();
         },2000)
-        // if(checkInterval) {
-        //     clearInterval(checkInterval);
-        // }
+        if(checkInterval) {
+            clearInterval(checkInterval);
+        }
         if(backupStatus) {
             stopBackupService();
         }
@@ -201,42 +201,50 @@ var stopServerService = async function() {
 }
 var serverStatusService = async function () { 
     console.log('Running server status check');
-    // $('#start-server').prop('disabled',true);
+    
+    serverCall().then(()=>{
+        if(serverStatus == 200) {
+            if(checkInterval != null) {
+                clearInterval(checkInterval);
+            }
+            $('#server-status').text('Online').css('color','lightgreen');
+            $('#save-world').show();
+            hideButton('start-server');
+        }
+        else if (serverStatus == 202) {
+            $('#server-status').text('Starting ...').css('color','orange');
+            hideButton('start-server');
+            checkInterval = setInterval(function () {
+                serverCall();
+                if(serverStatus == 200) {
+                    clearInterval(checkInterval);
+                    startBackupService();
+                    serverStatusService();
+                }
+            }, 30*1000); //Every 30 sec
+        }
+        else if (serverStatus == 204) {
+            if(checkInterval != null) {
+                clearInterval(checkInterval);
+            }
+            $('#server-status').text('Offline').css('color','red');
+                    hideButton('stop-server');
+                    $('#save-world').hide();
+        }
+    });
+};
+
+var serverCall = async function () {
+    // var result;
     await $.ajax({
         type: 'GET',
         url: `${connectionPath}server/status`,
         success: function(data, textStatus, xhr) {
-            if(xhr.status == 200) {
-                if(checkInterval != null) {
-                    clearInterval(checkInterval);
-                }
-                serverStatus = xhr.status;
-                $('#server-status').text('Online').css('color','lightgreen');
-                $('#save-world').show();
-                hideButton('start-server');
-            }
-            else if (xhr.status == 202) {
-                $('#server-status').text('Starting ...').css('color','orange');
-                hideButton('start-server');
-                checkInterval = setInterval(function () {
-                    serverStatusService();
-                    if(serverStatus == 200) {
-                        clearInterval(checkInterval);
-                        startBackupService();
-                    }
-                }, 30*1000); //Every 30 sec
-            }
-            else if (xhr.status == 204) {
-                if(checkInterval != null) {
-                    clearInterval(checkInterval);
-                }
-                $('#server-status').text('Offline').css('color','red');
-                        hideButton('stop-server');
-                        $('#save-world').hide();
-            }
+            serverStatus = xhr.status;
         }
-    })
-};
+    });
+    // return result;
+}
 
 var startBackupService = async function() {
     await $.get(`${connectionPath}backup/start`, function (res) {
