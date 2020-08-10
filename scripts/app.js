@@ -29,7 +29,7 @@ switch(env) {
 
 var serverStatus = 0;
 var backupStatus;
-var mapName = "The Island";
+var mapName;
 var checkInterval = null;
 
 $(document).ready(function(){
@@ -79,12 +79,14 @@ $(document).ready(function(){
         event.preventDefault();
         var form = $('form').serializeArray();
         
-        var GamePath = form[0].value;
-        var BackupPath = form[1].value;
-        var BackupInterval = parseInt(form[2].value);
-        var HoursSave = parseInt(form[3].value);
+        mapName = form[0].value;
+        var GamePath = form[1].value;
+        var BackupPath = form[2].value;
+        var BackupInterval = parseInt(form[3].value);
+        var HoursSave = parseInt(form[4].value);
         
-        var serverObject = {    "GamePath": GamePath, 
+        var serverObject = {    "MapName": mapName,
+                                "GamePath": GamePath, 
                                 "BackupPath": BackupPath,
                                 "BackupInterval": BackupInterval,
                                 "HoursSave": HoursSave
@@ -95,10 +97,6 @@ $(document).ready(function(){
             latestBackupService();
         });
     });
-
-    $('#startCustomMap').click(()=>{
-        startServerService('TheCenter');
-    })
 
     $('#update').click(function() {
         if($('.admin-class').css('display') == 'none'){
@@ -118,7 +116,6 @@ var init = function () {
     backupStatusService();
     serverStatusService();
     $('.edit-form').hide();
-    $('#map-name').text(mapName);
     console.log('Application started');
 }
 
@@ -136,7 +133,21 @@ var hideButton = function (componentName) {
 var getServerConfig = function () {
     $.get(`${connectionPath}server/settings`, function(res) {
         console.log('get server config');
-        //console.log(res);
+        // console.log(res);
+        mapName = res.MapName;
+        switch (res.MapName) {
+            case 'TheIsland':
+                $('#map-name').text('The Island');
+                break;
+            case 'TheCenter':
+                $('#map-name').text('The Center');
+                break;
+            default:
+                $('#map-name').text('Map Name Unavailable');
+        }
+
+        $('#map-name-config').text(mapName);
+        $('#map-name').val(mapName);
 
         $('#game-path-config').text(res.GamePath);
         $('#game-path').val(res.GamePath);
