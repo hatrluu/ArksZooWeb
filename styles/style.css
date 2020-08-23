@@ -1,9 +1,11 @@
-html, body {
+html,
+body {
     box-sizing: border-box;
     transition: 0.5s ease-in-out;
 }
-body{
-    background-image: url('./images/theisland-1.jpg');
+
+body {
+    background-image: url('./images/thecenter.jpg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: auto;
@@ -19,6 +21,7 @@ body{
     height: 100vh;
     width: 100vw;
 }
+
 .container {
     position: relative;
     display: flex;
@@ -28,40 +31,50 @@ body{
     display: flex;
     justify-content: center;
 }
+
 .card {
     margin: 1em;
     min-width: 500px;
     min-height: 600px;
 }
-.card, .div-item{
-    box-shadow: 0 0 10px rgba(0,0,0, 0.1);
+
+.card,
+.div-item {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
 .card-body>div {
     margin: 1em;
     padding: 1em;
     border: 1px solid rgb(214, 214, 214);
     border-radius: 0.25em;
 }
+
 #map-name {
     text-align: center;
     padding: 0;
     margin: 0;
 }
-.form-group label{
+
+.form-group label {
     font-weight: bold;
 }
+
 .server-settings {
     height: 400px;
     overflow-y: auto;
     list-style: none;
     padding: 0;
 }
+
 .server-settings li::before {
     content: "- ";
 }
+
 .item {
     color: rgb(111, 145, 255);
 }
+
 .toggle {
     position: absolute;
     right: 0px;
@@ -70,7 +83,7 @@ body{
     width: 24px;
     background-color: transparent;
     transition: ease 500ms;
-    cursor:  unset;
+    cursor: unset;
 }
 
 .toggle:hover {
