@@ -6,24 +6,22 @@ var env = 'prod';
 var hostname = '';
 var port = '';
 var connectionPath = '';
-switch(env) {
+switch (env) {
     case 'prod':
         hostname = 'www.arks-zoo.xyz';
-        port = '80';
-        connectionPath = `https://${hostname}/`
+        connectionPath = `https://${hostname}/`;
         break;
     case 'dev':
         hostname = 'localhost';
         port = '44347';
-        connectionPath = `https://${hostname}:${port}/`
+        connectionPath = `https://${hostname}:${port}/`;
         break;
     case 'test':
-        hostname = 'testing.arks-zoo.xyz'
-        port = '80';
-        connectionPath = `https://${hostname}/`
+        hostname = 'testing.arks-zoo.xyz';
+        connectionPath = `https://${hostname}/`;
         break;
     default:
-        hostname = '';            
+        hostname = '';
         port = '';
 }
 
@@ -32,66 +30,67 @@ var backupStatus;
 var mapName;
 var checkInterval = null;
 
-$(document).ready(function(){
+$(document).ready(function() {
     init();
 
-    $('#start-server').click(()=>{
+    $('#start-server').click(() => {
         startServerService(mapName);
         hideButton('start-server');
     })
-    $('#stop-server').click(()=>{
-        $('#server-status').text('Stopping ...').css('color','orange');
+    $('#stop-server').click(() => {
+        $('#server-status').text('Stopping ...').css('color', 'orange');
         stopServerService();
         hideButton('stop-server');
     })
-    $('#check-server').click(()=>{
-        $('#server-status').text('Checking ...').css('color','orange');
+    $('#check-server').click(() => {
+        $('#server-status').text('Checking ...').css('color', 'orange');
         getServerCurrentSave();
         serverStatusService();
     })
-    $('#save-world').click(()=>{
+    $('#save-world').click(() => {
         saveWorldService();
     });
-    $('#start-backup').click(()=>{
+    $('#start-backup').click(() => {
         startBackupService();
         hideButton('start-backup');
     })
-    $('#stop-backup').click(()=>{
+    $('#stop-backup').click(() => {
         stopBackupService();
         hideButton('stop-backup');
     })
-    $('#check-backup').click(()=>{
+    $('#check-backup').click(() => {
         backupStatusService();
         latestBackupService();
     })
-    $('#manual-backup').click(()=> {
+    $('#manual-backup').click(() => {
         manualBackup();
     })
-    $('#edit').click(()=> {
+    $('#edit').click(() => {
         $('.server-config').hide();
         $('.edit-form').show();
     })
-    $('#cancel-edit').click(()=>{
+    $('#cancel-edit').click(() => {
         $('.server-config').show();
         $('.edit-form').hide();
     })
     $('form').on("submit", function(event) {
         event.preventDefault();
         var form = $('form').serializeArray();
-        
+
         mapName = form[0].value;
         var GamePath = form[1].value;
         var BackupPath = form[2].value;
         var BackupInterval = parseInt(form[3].value);
         var HoursSave = parseInt(form[4].value);
-        
-        var serverObject = {    "MapName": mapName,
-                                "GamePath": GamePath, 
-                                "BackupPath": BackupPath,
-                                "BackupInterval": BackupInterval,
-                                "HoursSave": HoursSave
-                            };
-        
+
+        var serverObject = {
+            "MapName": mapName,
+            "GamePath": GamePath,
+            "BackupPath": BackupPath,
+            "BackupInterval": BackupInterval,
+            "HoursSave": HoursSave
+        };
+
         updateServerService(JSON.stringify(serverObject)).then(function() {
             getServerConfig();
             latestBackupService();
@@ -99,14 +98,14 @@ $(document).ready(function(){
     });
 
     $('#update').click(function() {
-        if($('.admin-class').css('display') == 'none'){
+        if ($('.admin-class').css('display') == 'none') {
             $('.admin-class').show();
         } else $('.admin-class').hide();
     })
 });
 
-var init = function () {
-    $('#server-status').text('Checking ...').css('color','orange');
+var init = function() {
+    $('#server-status').text('Checking ...').css('color', 'orange');
     $('#save-world').hide();
     hideButton('stop-server');
     getServerConfig();
@@ -115,22 +114,24 @@ var init = function () {
     getServerCurrentSave();
     backupStatusService();
     serverStatusService();
+    serverStats();
+    $('#online-players').hide();
     $('.edit-form').hide();
     console.log('Application started');
 }
 
-var hideButton = function (componentName) {
-    if(componentName.includes('start')){
-        $('#'+componentName).hide();
-        $('#stop-'+componentName.replace('start-','')).show();
-    } else if (componentName.includes('stop')){
-        $('#'+componentName).hide();
-        $('#start-'+componentName.replace('stop-','')).show();
+var hideButton = function(componentName) {
+    if (componentName.includes('start')) {
+        $('#' + componentName).hide();
+        $('#stop-' + componentName.replace('start-', '')).show();
+    } else if (componentName.includes('stop')) {
+        $('#' + componentName).hide();
+        $('#start-' + componentName.replace('stop-', '')).show();
     }
 }
 
 /* HTTP Methods v */
-var getServerConfig = function () {
+var getServerConfig = function() {
     $.get(`${connectionPath}server/settings`, function(res) {
         console.log('get server config');
         // console.log(res);
@@ -164,7 +165,7 @@ var getServerConfig = function () {
 }
 
 var updateServerService = async function(data) {
-    var success = function (){
+    var success = function() {
         console.log('Server config updated');
         $('.edit-form').hide();
         $('.server-config').show();
@@ -176,76 +177,74 @@ var updateServerService = async function(data) {
         contentType: 'application/json',
         success: success
     }).fail(function(res) {
-         console.log(`Status: ${res.status}, Reason: ${res.statusText}`);
-         console.log(res.responseJSON.errors)
-     })
+        console.log(`Status: ${res.status}, Reason: ${res.statusText}`);
+        console.log(res.responseJSON.errors)
+    })
 }
 var startServerService = function(mapName) {
     mapName = mapName.trim().replace(' ', '');
     //Map Name validation
-    $.get(`${connectionPath}server/start/${mapName}`, function (res) {
+    $.get(`${connectionPath}server/start/${mapName}`, function(res) {
         console.log(`Starting ${mapName}`);
         console.log(res);
-        $('#server-status').text('Starting ...').css('color','orange');
-    }).then(function(){
+        $('#server-status').text('Starting ...').css('color', 'orange');
+    }).then(function() {
         setTimeout(function() {
-            serverStatusService(); 
-        }, 100); 
+            serverStatusService();
+        }, 100);
     });
 }
 var stopServerService = async function() {
-    await $.get(`${connectionPath}server/stop`, function (res) {
+    await $.get(`${connectionPath}server/stop`, function(res) {
         console.log(`Stopping server`);
-    }).then(function(){
+    }).then(function() {
         serverStatus = 0;
         getServerCurrentSave();
-        setTimeout(function(){
+        setTimeout(function() {
             serverStatusService();
-        },2000)
-        if(checkInterval) {
+        }, 2000)
+        if (checkInterval) {
             clearInterval(checkInterval);
         }
-        if(backupStatus) {
+        if (backupStatus) {
             stopBackupService();
         }
     });
 }
-var serverStatusService = async function () { 
+var serverStatusService = async function() {
     console.log('Running server status check');
-    
-    serverCall().then(()=>{
-        if(serverStatus == 200) {
-            if(checkInterval != null) {
+
+    serverCall().then(() => {
+        if (serverStatus == 200) {
+            if (checkInterval != null) {
                 clearInterval(checkInterval);
             }
-            $('#server-status').text('Online').css('color','lightgreen');
+            $('#server-status').text('Online').css('color', 'lightgreen');
             $('#save-world').show();
             hideButton('start-server');
-        }
-        else if (serverStatus == 202) {
-            $('#server-status').text('Starting ...').css('color','orange');
+        } else if (serverStatus == 202) {
+            $('#server-status').text('Starting ...').css('color', 'orange');
             hideButton('start-server');
-            checkInterval = setInterval(function () {
+            checkInterval = setInterval(function() {
                 serverCall();
-                if(serverStatus == 200) {
+                if (serverStatus == 200) {
                     clearInterval(checkInterval);
                     startBackupService();
                     serverStatusService();
                 }
-            }, 30*1000); //Every 30 sec
-        }
-        else if (serverStatus == 204) {
-            if(checkInterval != null) {
+            }, 30 * 1000); //Every 30 sec
+        } else if (serverStatus == 204) {
+            if (checkInterval != null) {
                 clearInterval(checkInterval);
             }
-            $('#server-status').text('Offline').css('color','red');
-                    hideButton('stop-server');
-                    $('#save-world').hide();
+            $('#server-status').text('Offline').css('color', 'red');
+            hideButton('stop-server');
+            $('#save-world').hide();
         }
     });
 };
 
-var serverCall = async function () {
+var serverCall = async function() {
     // var result;
     await $.ajax({
         type: 'GET',
@@ -257,43 +256,52 @@ var serverCall = async function () {
     // return result;
 }
 
+var serverStats = function() {
+    $.get(`${connectionPath}server/stats`, function(res) {
+        if (res.length > 1) {
+            $('#current-players').text(`${res[0]} / ${res[1]}`);
+            $('#online-players').show();
+        }
+    })
+}
+
 var startBackupService = async function() {
-    await $.get(`${connectionPath}backup/start`, function (res) {
+    await $.get(`${connectionPath}backup/start`, function(res) {
         console.log(`Starting backup`);
         console.log(res);
-    }).then(function(){
+    }).then(function() {
         backupStatusService();
     });
 }
 var stopBackupService = async function() {
-    await $.get(`${connectionPath}backup/stop`, function (res) {
+    await $.get(`${connectionPath}backup/stop`, function(res) {
         console.log(`Stopping backup`);
         console.log(res);
-    }).then(function(){
+    }).then(function() {
         backupStatusService();
     });
 }
-var backupStatusService = function () {
+var backupStatusService = function() {
     console.log('Running backup status check');
     $.get(`${connectionPath}backup/status`, function(res) {
         backupStatus = res;
-        if(backupStatus) {
-            $('#backup-status').text('Running').css('color','lightgreen');
+        if (backupStatus) {
+            $('#backup-status').text('Running').css('color', 'lightgreen');
             hideButton('start-backup');
         } else {
-            $('#backup-status').text('Not Running').css('color','red');
+            $('#backup-status').text('Not Running').css('color', 'red');
             hideButton('stop-backup');
         }
     })
 }
 
-var latestBackupService = function () {
+var latestBackupService = function() {
     console.log('Running latest backup check');
     $.get(`${connectionPath}backup/latest`, function(res) {
         $('#latest-backup').text(`Latest backup at ${res.slice(0,2)}:${res.slice(2,4)} ${res.slice(4,6)}, ${res.slice(7,9)}/${res.slice(9)}`).removeClass('red');
     })
 }
-var manualBackup = async function () {
+var manualBackup = async function() {
     await $.get(`${connectionPath}backup/manual`, function(res) {
         console.log(res);
     }).then(function() {
@@ -306,13 +314,13 @@ var getServerCurrentSave = function() {
         $("#server-current-save").text(time.toLocaleString());
     })
 }
-var saveWorldService = async function(){
-    await $.get(`${connectionPath}server/save`).then(function() {
-        getServerCurrentSave();
-    });
-}
-/* HTTP Methods ^ */
-var getCurrentServerSettings = function () {
+var saveWorldService = async function() {
+        await $.get(`${connectionPath}server/save`).then(function() {
+            getServerCurrentSave();
+        });
+    }
+    /* HTTP Methods ^ */
+var getCurrentServerSettings = function() {
     var currentServerSettings = [
         'XPMultiplier = 3',
         'TamingSpeedMultiplier = 10 => TamingSpeedMultiplier = 15',
@@ -331,7 +339,7 @@ var getCurrentServerSettings = function () {
         'DifficultyOffset = 1.8',
         'OverrideOfficialDifficulty = 7.0'
     ]
-    
+
     currentServerSettings.forEach(item => {
         $('#current-server-settings').append(`<li>${item}</li>`)
     })
